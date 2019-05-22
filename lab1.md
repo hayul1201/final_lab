@@ -471,9 +471,9 @@ MariaDB [(none)]> show databases;
 +--------------------+
 14 rows in set (0.00 sec)
 ```
-##Setup the CM database
+## Setup the CM database
 ```
-centos@util01 ~]$ sudo /usr/share/cmf/schema/scm_prepare_database.sh mysql scm scm
+[centos@util01 ~]$ sudo /usr/share/cmf/schema/scm_prepare_database.sh mysql scm scm
 Enter SCM password:
 JAVA_HOME=/usr/lib/jvm/java-openjdk
 Verifying that we can write to /etc/cloudera-scm-server
@@ -481,4 +481,21 @@ Creating SCM configuration file in /etc/cloudera-scm-server
 Executing:  /usr/lib/jvm/java-openjdk/bin/java -cp /usr/share/java/mysql-connector-java.jar:/usr/share/java/oracle-connector-java.jar:/usr/share/java/postgresql-connector-java.jar:/usr/share/cmf/schema/../lib/* com.cloudera.enterprise.dbutil.DbCommandExecutor /etc/cloudera-scm-server/db.properties com.cloudera.cmf.db.
 [                          main] DbCommandExecutor              INFO  Successfully connected to database.
 All done, your SCM database is configured correctly!
+```
+# CM Server 시작 및 log확인
+```
+[centos@util01 ~]$ sudo systemctl start cloudera-scm-server
+[centos@util01 ~]$ sudo tail -f /var/log/cloudera-scm-server/cloudera-scm-server.log
+
+.....
+2019-05-21 10:39:35,072 INFO SearchRepositoryManager-0:com.cloudera.server.web.cmf.search.components.SearchRepositoryManager: Num entities:209
+2019-05-21 10:39:35,072 INFO SearchRepositoryManager-0:com.cloudera.server.web.cmf.search.components.SearchRepositoryManager: Generating documents:2019-05-21T01:39:35.072Z
+2019-05-21 10:39:35,094 INFO SearchRepositoryManager-0:com.cloudera.server.web.cmf.search.components.SearchRepositoryManager: Num docs:222
+2019-05-21 10:39:35,094 INFO SearchRepositoryManager-0:com.cloudera.server.web.cmf.search.components.SearchRepositoryManager: Constructing repo:2019-05-21T01:39:35.094Z
+2019-05-21 10:39:35,197 INFO WebServerImpl:com.cloudera.server.web.cmf.AggregatorController: AggregateSummaryScheduler started.
+2019-05-21 10:39:35,687 INFO SearchRepositoryManager-0:com.cloudera.server.web.cmf.search.components.SearchRepositoryManager: Finished constructing repo:2019-05-21T01:39:35.687Z
+2019-05-21 10:39:35,688 INFO WebServerImpl:org.mortbay.log: jetty-6.1.26.cloudera.4
+2019-05-21 10:39:35,690 INFO WebServerImpl:org.mortbay.log: Started SelectChannelConnector@0.0.0.0:7180
+2019-05-21 10:39:35,690 INFO WebServerImpl:com.cloudera.server.cmf.WebServerImpl: Started Jetty server.
+2019-05-21 10:39:40,531 INFO ScmActive-0:com.cloudera.server.cmf.components.ScmActive: ScmActive completed successfully.
 ```
