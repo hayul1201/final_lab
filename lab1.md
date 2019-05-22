@@ -48,6 +48,8 @@ javac 1.8.0_212
 #  CM 설치
 ```
 [centos@util01 ~]$ sudo wget https://archive.cloudera.com/cm5/redhat/7/x86_64/cm/cloudera-manager.repo -P /etc/yum.repos.d/
+```
+```
 --2019-05-22 13:50:33--  https://archive.cloudera.com/cm5/redhat/7/x86_64/cm/cloudera-manager.repo
 Resolving archive.cloudera.com (archive.cloudera.com)... 151.101.108.167
 Connecting to archive.cloudera.com (archive.cloudera.com)|151.101.108.167|:443... connected.
@@ -58,14 +60,18 @@ Saving to: ‘/etc/yum.repos.d/cloudera-manager.repo’
 100%[======================================>] 290         --.-K/s   in 0s
 
 2019-05-22 13:50:34 (86.4 MB/s) - ‘/etc/yum.repos.d/cloudera-manager.repo’ saved [290/290]
-
+```
+## CM 5.15.2 설정
+```
 [centos@util01 ~]$ sudo vi /etc/yum.repos.d/cloudera-manager.repo
+
 baseurl=https://archive.cloudera.com/cm5/redhat/6/x86_64/cm/5.15.2/
 
 [centos@util01 ~]$ sudo rpm --import https://archive.cloudera.com/cm5/redhat/7/x86_64/cm/RPM-GPG-KEY-cloudera
-
-
-[centos@util01 ~]$ sudo yum install -y cloudera-manager-daemons cloudera-manager                               -server
+```
+## CM Server설치
+```
+[centos@util01 ~]$ sudo yum install -y cloudera-manager-daemons cloudera-manager-server
 Loaded plugins: fastestmirror
 Loading mirror speeds from cached hostfile
  * base: ftp.neowiz.com
@@ -304,10 +310,10 @@ pid-file=/var/run/mariadb/mariadb.pid
 #
 !includedir /etc/my.cnf.d
 
-```
-```
 [centos@util01 ~]$ sudo systemctl start mariadb
+```
 
+```
 [centos@util01 ~]$ sudo /usr/bin/mysql_secure_installation
 
 NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MariaDB
@@ -371,6 +377,7 @@ installation should now be secure.
 Thanks for using MariaDB!
 ```
 
+## mariadb connector 설치
 ```
 [centos@util01 ~]$ sudo rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 [centos@util01 ~]$ sudo wget "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.46.tar.gz"
@@ -395,8 +402,53 @@ Saving to: ‘mysql-connector-java-5.1.46.tar.gz’
 [centos@util01 ~]$ sudo mkdir -p /usr/share/java/
 [centos@util01 ~]$ cd mysql-connector-java-5.1.46
 [centos@util01 mysql-connector-java-5.1.46]$ sudo cp mysql-connector-java-5.1.46-bin.jar /usr/share/java/mysql-connector-java.jar
-[centos@util01 mysql-connector-java-5.1.46]$
+```
+## DB 권한설정 및 확인
 
+```
+drop database if exists amon;
+create database amon character set utf8;
+grant all privileges on amon.* to amon@'%' identified by 'amon_password';
+
+drop database if exists rman;
+create database rman character set utf8;
+grant all privileges on rman.* to rman@'%' identified by 'rman_password';
+
+drop database if exists metastore;
+create database metastore character set utf8;
+grant all privileges on metastore.* to hive@'%' identified by 'hive_password';
+
+drop database if exists sentry;
+create database sentry character set utf8;
+grant all privileges on sentry.* to sentry@'%' identified by 'sentry_password';
+
+drop database if exists nav;
+create database nav character set utf8;
+grant all privileges on nav.* to nav@'%' identified by 'nav_password';
+
+drop database if exists navms;
+create database navms character set utf8;
+grant all privileges on navms.* to navms@'%' identified by 'navms_password';
+
+drop database if exists cdh;
+create database cdh character set utf8;
+grant all privileges on cdh.* to cdh@'%' identified by 'cdh';
+
+drop database if exists hue;
+create database hue character set utf8;
+grant all privileges on hue.* to hue@'%' identified by 'hue';
+
+drop database if exists oozie;
+create database oozie character set utf8;
+grant all privileges on oozie.* to oozie@'%' identified by 'oozie';
+
+drop database if exists hive;
+create database hive character set utf8;
+grant all privileges on hive.* to hive@'%' identified by 'hive';
+
+drop database if exists scm;
+create database scm character set utf8;
+grant all privileges on scm.* to scm@'%' identified by 'scm';
 
 MariaDB [(none)]> show databases;
 +--------------------+
@@ -418,8 +470,9 @@ MariaDB [(none)]> show databases;
 | sentry             |
 +--------------------+
 14 rows in set (0.00 sec)
-
-
+```
+##Setup the CM database
+```
 centos@util01 ~]$ sudo /usr/share/cmf/schema/scm_prepare_database.sh mysql scm scm
 Enter SCM password:
 JAVA_HOME=/usr/lib/jvm/java-openjdk
