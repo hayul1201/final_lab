@@ -79,4 +79,44 @@ and state = 'CA';
 12	Jasper	Lara	Palo Alto	CA
 ```
  
+#Q6
+```
+CREATE EXTERNAL TABLE employee_solution (
+	  id 		int, 	  
+	  fname string, 
+	  lname string, 
+	  address string, 
+	  city string, 
+	  state string, 
+	  zip string, 
+	  birthday string)
+	LOCATION	  'hdfs://localhost:8020/user/training/problem6/employee'
+ ```
+```
+insert into table employee_solution 
+select id,
+    fname,
+    lname,
+    address,
+    city,
+    state,
+    zip,
+    substr(birthday, 1,5)
+from employee;
 
+select * from employee_solution limit 10;
+
+```
+```
+1	10000000	Deanna	Lane	900-1514 Vitae, Rd.	Lafayette	LA	97827	08/31
+2	10000001	Hall	Garrett	9656 Urna Avenue	Tucson	AZ	86511	08/24
+3	10000002	Lucian	Dotson	P.O. Box 277, 4808 Fusce St.	Kearney	NE	57731	08/12
+4	10000003	Yuri	Sherman	Ap #399-8275 Molestie Road	Kapolei	HI	16943	08/26
+5	10000004	Jaime	Griffin	Ap #647-2123 Quis Rd.	Madison	WI	51394	08/13
+6	10000005	Zorita	Weber	747-9424 Orci, Av.	Hattiesburg	MS	90262	08/09
+7	10000006	Mara	Meadows	517-4594 Ac, Rd.	Huntsville	AL	35374	08/11
+8	10000007	Evan	Richard	P.O. Box 223, 8182 Non, Av.	College	AK	99682	08/25
+9	10000008	Briar	Anderson	Ap #548-6452 Nunc Road	Cleveland	OH	90704	08/18
+10	10000009	Cole	Odom	P.O. Box 962, 2496 Sodales St.	Boston	MA	27282	08/21
+```
+ 
